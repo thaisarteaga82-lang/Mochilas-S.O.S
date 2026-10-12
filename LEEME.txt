@@ -1,0 +1,21 @@
+MOCHILA S.O.S. — PROTOTIPO WEB
+================================
+Contenido:
+- index.html: estructura de la aplicación.
+- styles.css: diseño adaptable a celular y computadora.
+- app.js: listas, guardado local, información de medicamentos, lugares y geolocalización.
+- assets/logo-mochila-sos.png: logo original proporcionado por la usuaria.
+
+Cómo ejecutar:
+1. Descomprime Mochila_SOS.zip.
+2. Abre index.html en un navegador.
+3. Para usar GPS de forma más fiable, abre el proyecto mediante localhost (por ejemplo, con Live Server de VS Code o `python -m http.server` dentro de la carpeta).
+
+Importante:
+- Las listas y lugares se guardan en localStorage del navegador.
+- El mapa usa OpenStreetMap con estilo cartográfico de calles parecido al de Google Maps. El mapa necesita internet.
+- Los marcadores personales son referencias, no validaciones oficiales de seguridad. No se muestran zonas de riesgo reales sin datos oficiales verificados.
+- La ubicación necesita permiso del usuario. Compartirla a distancia necesita una conexión o medio de comunicación disponible.
+- Las alertas de esta versión son consejos generales, no alertas en tiempo real.
+- La sección de medicamentos no recomienda fármacos ni dosis. Consulta a un profesional de salud o veterinario.
+- Prototipo educativo: no reemplaza los servicios de emergencia ni las instrucciones de autoridades locales.
