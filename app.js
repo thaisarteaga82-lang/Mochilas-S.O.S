@@ -37,3 +37,24 @@ $("copyLocation").addEventListener("click",async()=>{if(!coordsNow)return;let s=
 $("shareLocation").addEventListener("click",async()=>{if(!coordsNow)return;let url=`https://maps.google.com/?q=${coordsNow.lat},${coordsNow.lon}`;if(navigator.share){try{await navigator.share({title:"Mi ubicación - Mochila S.O.S.",url})}catch{}}else{try{await navigator.clipboard.writeText(url);toast("Enlace de ubicación copiado.")}catch{toast(url)}}});
 $("centerMap").addEventListener("click",()=>getPos(pos=>{let lat=pos.coords.latitude,lon=pos.coords.longitude;$("mapFrame").src=`https://www.openstreetmap.org/export/embed.html?bbox=${lon-.012}%2C${lat-.008}%2C${lon+.012}%2C${lat+.008}&layer=mapnik&marker=${lat}%2C${lon}`;toast("Mapa centrado en tu ubicación.")}));
 renderList();renderMed();renderPlaces();
+
+
+// Resalta la sección activa en la navegación inferior.
+(() => {
+  const links = [...document.querySelectorAll('.bottom-link')];
+  const sections = links.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+  if (!('IntersectionObserver' in window) || !sections.length) return;
+  const observer = new IntersectionObserver(entries => {
+    const visible = entries.filter(entry => entry.isIntersecting).sort((a,b) => b.intersectionRatio-a.intersectionRatio)[0];
+    if (!visible) return;
+    links.forEach(link => {
+      const active = link.getAttribute('href') === '#' + visible.target.id;
+      link.classList.toggle('active', active);
+      if (active) link.setAttribute('aria-current','page'); else link.removeAttribute('aria-current');
+    });
+  }, { rootMargin: '-20% 0px -55% 0px', threshold: [0, .15, .35, .6] });
+  sections.forEach(section => observer.observe(section));
+  links.forEach(link => link.addEventListener('click', () => {
+    links.forEach(item => item.classList.toggle('active', item === link));
+  }));
+})();
