@@ -1,22 +1,38 @@
-MOCHILA S.O.S. — versión con pantallas independientes
+MOCHILA S.O.S. — APLICACIÓN WEB
+================================
 
-CONTENIDO
-- index.html: estructura de la aplicación.
-- styles.css: estilos adaptables para computadora y móvil.
-- app.js: navegación, listas, progreso, mapa, ubicación y contactos/lugares guardados.
-- assets/logo-mochila-sos.png: logo proporcionado.
+CÓMO ABRIRLA
+1. Descomprime Mochila_SOS.zip.
+2. Abre la carpeta Mochila_SOS.
+3. Haz doble clic en index.html para abrir la aplicación en tu navegador.
+   Algunas funciones del navegador (como geolocalización) pueden requerir abrirla
+   desde HTTPS o localhost y aceptar los permisos correspondientes.
 
-CÓMO PROBAR
-1. Extrae toda la carpeta Mochila_SOS.
-2. Abre index.html en un navegador moderno.
-3. Usa la barra fija inferior para cambiar entre Inicio, Mochila, Mapa, Ubicación y Alertas.
-4. En GitHub Pages, sube el contenido de esta carpeta a la raíz del repositorio existente y confirma los cambios.
+ARCHIVOS
+- index.html: estructura de las cinco pantallas independientes.
+- styles.css: diseño adaptable a computadora y celular, con menú inferior fijo.
+- app.js: navegación entre pantallas, listas, ubicación y almacenamiento local.
+- assets/logo-mochila-sos.png: logo proporcionado para Mochilas S.O.S.
 
-CAMBIOS
-Se conserva la base funcional anterior (listas por edad y mascota, fórmula infantil, higiene, información de medicamentos, mapa, marcadores personales, ubicación GPS, copiar/compartir coordenadas, alertas y guía). La diferencia principal es que Inicio, Mochila, Mapa, Ubicación y Alertas ahora son vistas independientes. Medicamentos y guía rápida se conservan dentro de la vista Mochila.
+PANTALLAS
+- Inicio
+- Mochila: lista de comprobación adaptable para adulto, niño/a, bebé,
+  adulto mayor o mascota; progreso y notas locales.
+- Mapa: mapa en línea de OpenStreetMap y referencias personales locales.
+- Ubicación: coordenadas del dispositivo, opción de compartir y contactos.
+- Alertas: consejos generales para distintos tipos de emergencia.
 
-NOTAS
-- El mapa requiere internet.
-- La ubicación necesita permiso del navegador y suele requerir HTTPS o localhost.
-- Las marcas de seguridad son personales y no están verificadas oficialmente.
-- No envía alertas oficiales ni solicita rescate automáticamente.
+PRIVACIDAD Y LIMITACIONES
+- Los datos de listas, notas, referencias y contactos se guardan en el navegador
+  de este dispositivo mediante localStorage; no se envían a un servidor.
+- El mapa necesita conexión a internet.
+- Las referencias del mapa son personales y no verificadas; no son zonas oficiales.
+- La aplicación no emite alertas oficiales en tiempo real ni despacha rescates.
+- Confirma números, refugios y rutas con fuentes oficiales locales.
+- La información de medicamentos es general; sigue las indicaciones de profesionales
+  sanitarios y no cambies dosis por recomendaciones de la aplicación.
+
+PUBLICAR EN GITHUB PAGES
+Sube el contenido de la carpeta (index.html, styles.css, app.js, assets y LEEME.txt)
+a la raíz del repositorio. En Settings > Pages, selecciona Deploy from a branch,
+la rama main y la carpeta /(root). Confirma los cambios y espera a que se publique.
