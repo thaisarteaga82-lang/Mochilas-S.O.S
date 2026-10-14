@@ -1,60 +1,70 @@
-const data={
-bebe:{title:"Mochila para bebé",desc:"Artículos básicos adaptados a su edad y necesidades.",tip:"Guarda la fórmula infantil habitual que el bebé ya consume. Consulta a su pediatra para necesidades específicas.",items:["Fórmula infantil habitual","Biberón o utensilios habituales limpios","Agua segura, según indicación para su preparación","Pañales suficientes","Higiene: toallitas húmedas, crema protectora habitual y bolsas para pañales usados","Ropa limpia y adecuada al clima","Manta ligera","Medicamentos personales indicados"]},
-nino:{title:"Mochila para niño",desc:"Considera edad, alergias, necesidades especiales y duración de la evacuación.",tip:"Incluye alimentos que ya consume y que sean apropiados para su edad; revisa alergias y restricciones alimentarias.",items:["Agua potable","Alimentos no perecibles apropiados para su edad","Ropa de cambio y abrigo","Higiene: cepillo y pasta dental, jabón, papel higiénico y toallitas","Documento o tarjeta con contactos de emergencia","Linterna pequeña","Objeto de consuelo o entretenimiento","Medicamentos personales indicados"]},
-adolescente:{title:"Mochila para adolescente",desc:"Elementos para mantenerse hidratado, identificado y preparado.",tip:"Asegúrate de que conozca el plan familiar, los contactos y el punto de encuentro.",items:["Agua potable","Alimentos no perecibles","Ropa de cambio y abrigo","Linterna y pilas","Batería portátil y cable","Documento o copia de identificación","Higiene: cepillo y pasta dental, jabón, desodorante, papel higiénico y productos menstruales si los necesita","Medicamentos personales indicados"]},
-adulto:{title:"Mochila para adulto",desc:"Suministros básicos y artículos personales importantes.",tip:"Revisa la mochila periódicamente y adapta el contenido al clima, los riesgos locales y las necesidades del hogar.",items:["Agua potable","Alimentos no perecibles","Botiquín básico de primeros auxilios","Linterna y pilas","Radio portátil, si tienes una","Copia de documentos importantes en bolsa impermeable","Higiene: cepillo y pasta dental, jabón, desodorante, papel higiénico y artículos personales","Medicamentos personales indicados"]},
-mayor:{title:"Mochila para adulto mayor",desc:"Prioriza accesibilidad, tratamientos habituales y ayudas personales.",tip:"Guarda una lista actualizada de medicamentos y necesidades. Comprueba que los artículos sean fáciles de alcanzar.",items:["Agua potable y alimentos adecuados","Lista de tratamientos y medicamentos personales indicados","Lentes, audífonos u otras ayudas personales","Ayuda para caminar, si la utiliza","Ropa cómoda y abrigo","Documentos y contactos de emergencia","Higiene: artículos dentales, jabón, toallitas y pañales para adultos si los necesita","Linterna fácil de manejar"]},
-mascota:{title:"Mochila para mascota",desc:"Adapta el contenido a la especie, tamaño, salud y duración de la evacuación.",tip:"Guarda el alimento habitual, una foto reciente y una identificación. Los medicamentos deben ser indicados por su veterinario.",items:["Alimento habitual de la mascota","Agua y recipiente plegable","Correa, arnés o transportadora","Higiene: bolsas para desechos, paños y material absorbente apropiado para la especie","Placa de identificación y datos del responsable","Foto reciente y registro de vacunas, si está disponible","Manta o elemento familiar","Medicamentos personales indicados por su veterinario"]}
-};
-const medData={
-bebe:["Bebé","Incluye únicamente los medicamentos que su pediatra haya indicado para ese bebé y conserva las instrucciones profesionales junto al producto."],
-nino:["Niño","Consulta al pediatra o farmacéutico sobre qué medicamentos son apropiados para su edad y peso. No calcules dosis por tu cuenta."],
-adolescente:["Adolescente","Guarda los tratamientos personales prescritos y sigue sus indicaciones. No compartas medicamentos con otras personas."],
-adulto:["Adulto","Prepara los tratamientos habituales prescritos y una lista actualizada. Revisa vencimientos y condiciones de conservación."],
-mayor:["Adulto mayor","Mantén una lista de tratamientos, horarios y alergias; consulta a un profesional para prevenir errores e interacciones."],
-mascota:["Mascota","Incluye solo tratamientos indicados por un veterinario. No administres medicamentos humanos por tu cuenta."]};
-const KEY="mochilaSOS_v2";let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||"{}")}catch{}
-let cat="bebe",med="bebe",coordsNow=null;const $=id=>document.getElementById(id);
-function persist(){try{localStorage.setItem(KEY,JSON.stringify(saved))}catch{}}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function toast(s){const t=$("toast");t.textContent=s;t.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove("show"),2600)}
-function renderList(){const d=data[cat],checked=saved.checks?.[cat]||[];$("listTitle").textContent=d.title;$("listDesc").textContent=d.desc;$("tipText").textContent=d.tip;$("items").innerHTML=d.items.map((s,i)=>`<label class="item ${checked.includes(i)?"checked":""}"><input type="checkbox" data-i="${i}" ${checked.includes(i)?"checked":""}><span>${esc(s)}</span></label>`).join("");document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("active",b.dataset.cat===cat));$("count").textContent=`${checked.length} / ${d.items.length}`;$("progressBar").style.width=`${checked.length/d.items.length*100}%`}
-$("tabs").addEventListener("click",e=>{let b=e.target.closest("[data-cat]");if(b){cat=b.dataset.cat;renderList()}});
-$("items").addEventListener("change",e=>{if(!e.target.matches("input"))return;saved.checks=saved.checks||{};saved.checks[cat]=saved.checks[cat]||[];let i=+e.target.dataset.i;saved.checks[cat]=e.target.checked?[...new Set([...saved.checks[cat],i])]:saved.checks[cat].filter(n=>n!==i);persist();renderList()});
-$("clear").addEventListener("click",()=>{saved.checks=saved.checks||{};saved.checks[cat]=[];persist();renderList();toast("Lista desmarcada.")});
-$("save").addEventListener("click",()=>{persist();$("savedMsg").textContent="Progreso guardado en este dispositivo.";toast("Progreso guardado.")});
-function renderMed(){const d=medData[med];$("medTitle").textContent=d[0];$("medText").textContent=d[1];document.querySelectorAll("#medTabs button").forEach(b=>b.classList.toggle("active",b.dataset.med===med));}
-$("medTabs").addEventListener("click",e=>{let b=e.target.closest("[data-med]");if(b){med=b.dataset.med;renderMed()}});
-$("goMeds").addEventListener("click",()=>{med=cat;renderMed();$("medicamentos").scrollIntoView({behavior:"smooth"})});
-$("menuToggle").addEventListener("click",()=> $("nav").classList.toggle("open"));document.querySelectorAll("#nav a").forEach(a=>a.addEventListener("click",()=>$("nav").classList.remove("open")));
-function renderPlaces(){let ps=saved.places||[];$("places").innerHTML=ps.length?ps.map((p,i)=>`<div class="place"><i class="mark" style="background:${p.type==="safe"?"#249b58":"#f0182b"}"></i><div><strong>${esc(p.name)}</strong><small>${p.type==="safe"?"Punto seguro / encuentro":"Zona de riesgo por verificar"}${p.note?" · "+esc(p.note):""}</small></div><button data-del="${i}" aria-label="Eliminar lugar">×</button></div>`).join(""):'<p class="muted">Todavía no hay lugares guardados.</p>'}
-$("placeForm").addEventListener("submit",e=>{e.preventDefault();saved.places=saved.places||[];saved.places.push({name:$("placeName").value.trim(),type:$("placeType").value,note:$("placeNote").value.trim()});persist();renderPlaces();e.target.reset();toast("Lugar guardado en este dispositivo.")});
-$("places").addEventListener("click",e=>{let b=e.target.closest("[data-del]");if(!b)return;saved.places.splice(+b.dataset.del,1);persist();renderPlaces()});
-function getPos(success){if(!navigator.geolocation){toast("Este navegador no admite geolocalización.");return}navigator.geolocation.getCurrentPosition(success,err=>toast(err.code===1?"Permiso de ubicación denegado.":"No se pudo obtener la ubicación. Inténtalo otra vez."),{enableHighAccuracy:true,timeout:15000,maximumAge:60000})}
-function setCoords(pos){coordsNow={lat:pos.coords.latitude,lon:pos.coords.longitude};$("coordinates").textContent=`${coordsNow.lat.toFixed(6)}, ${coordsNow.lon.toFixed(6)}`;$("accuracy").textContent=`Precisión estimada: ±${Math.round(pos.coords.accuracy)} metros`;$("locStatus").textContent="Ubicación obtenida. Revisa con quién la compartes."; $("copyLocation").disabled=false;$("shareLocation").disabled=false}
-$("getLocation").addEventListener("click",()=>{$("locStatus").textContent="Solicitando permiso de ubicación…";getPos(setCoords)});
-$("copyLocation").addEventListener("click",async()=>{if(!coordsNow)return;let s=`${coordsNow.lat}, ${coordsNow.lon}`;try{await navigator.clipboard.writeText(s);toast("Coordenadas copiadas.")}catch{toast(s)}});
-$("shareLocation").addEventListener("click",async()=>{if(!coordsNow)return;let url=`https://maps.google.com/?q=${coordsNow.lat},${coordsNow.lon}`;if(navigator.share){try{await navigator.share({title:"Mi ubicación - Mochila S.O.S.",url})}catch{}}else{try{await navigator.clipboard.writeText(url);toast("Enlace de ubicación copiado.")}catch{toast(url)}}});
-$("centerMap").addEventListener("click",()=>getPos(pos=>{let lat=pos.coords.latitude,lon=pos.coords.longitude;$("mapFrame").src=`https://www.openstreetmap.org/export/embed.html?bbox=${lon-.012}%2C${lat-.008}%2C${lon+.012}%2C${lat+.008}&layer=mapnik&marker=${lat}%2C${lon}`;toast("Mapa centrado en tu ubicación.")}));
-renderList();renderMed();renderPlaces();
-
-
-// Resalta la sección activa en la navegación inferior.
 (() => {
-  const links = [...document.querySelectorAll('.bottom-link')];
-  const sections = links.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
-  if (!('IntersectionObserver' in window) || !sections.length) return;
-  const observer = new IntersectionObserver(entries => {
-    const visible = entries.filter(entry => entry.isIntersecting).sort((a,b) => b.intersectionRatio-a.intersectionRatio)[0];
-    if (!visible) return;
-    links.forEach(link => {
-      const active = link.getAttribute('href') === '#' + visible.target.id;
-      link.classList.toggle('active', active);
-      if (active) link.setAttribute('aria-current','page'); else link.removeAttribute('aria-current');
-    });
-  }, { rootMargin: '-20% 0px -55% 0px', threshold: [0, .15, .35, .6] });
-  sections.forEach(section => observer.observe(section));
-  links.forEach(link => link.addEventListener('click', () => {
-    links.forEach(item => item.classList.toggle('active', item === link));
-  }));
+  'use strict';
+  const $ = (s, root = document) => root.querySelector(s);
+  const $$ = (s, root = document) => [...root.querySelectorAll(s)];
+  const STORAGE = { checks: 'mosos-checks-v2', type: 'mosos-person-v2', notes: 'mosos-notes-v2', places: 'mosos-places-v2', contacts: 'mosos-contacts-v2' };
+  const defaultItems = [
+    {id:'water',name:'Agua potable',detail:'Agua para beber; revisa y renueva con frecuencia',groups:['adulto','nino','bebe','adultomayor','mascota']},
+    {id:'food',name:'Alimentos no perecederos',detail:'Opciones fáciles de transportar y adecuadas para la familia',groups:['adulto','nino','bebe','adultomayor','mascota']},
+    {id:'light',name:'Linterna y pilas',detail:'Comprueba que funcionen',groups:['adulto','nino','bebe','adultomayor','mascota']},
+    {id:'radio',name:'Radio portátil',detail:'Para escuchar información oficial si fallan las comunicaciones',groups:['adulto','nino','bebe','adultomayor']},
+    {id:'firstaid',name:'Botiquín básico',detail:'Material de primeros auxilios e instrucciones de uso',groups:['adulto','nino','bebe','adultomayor','mascota']},
+    {id:'documents',name:'Documentos importantes',detail:'Copias protegidas de documentos y contactos',groups:['adulto','nino','bebe','adultomayor']},
+    {id:'charger',name:'Cargador y batería portátil',detail:'Mantén los dispositivos cargados',groups:['adulto','nino','adultomayor']},
+    {id:'hygiene',name:'Higiene personal',detail:'Jabón, papel higiénico, toallitas y bolsas',groups:['adulto','nino','bebe','adultomayor']},
+    {id:'clothes',name:'Ropa de cambio y abrigo',detail:'Prendas cómodas, según clima y necesidades',groups:['adulto','nino','bebe','adultomayor','mascota']},
+    {id:'cash',name:'Dinero en efectivo y llaves',detail:'Guarda una cantidad pequeña y llaves de repuesto',groups:['adulto','adultomayor']},
+    {id:'mask',name:'Mascarillas y protección',detail:'Según las recomendaciones sanitarias locales',groups:['adulto','nino','adultomayor']},
+    {id:'baby',name:'Pañales, leche y artículos del bebé',detail:'Incluye solo los productos adecuados para tu bebé',groups:['bebe']},
+    {id:'comfort',name:'Artículo de consuelo y datos del cuidador',detail:'Identificación y necesidades específicas del niño o niña',groups:['nino','bebe']},
+    {id:'mobility',name:'Ayudas personales',detail:'Lentes, audífonos, baterías o ayudas para movilidad',groups:['adultomayor']},
+    {id:'petfood',name:'Comida, agua y recipiente para mascota',detail:'Suministro apropiado para tu animal',groups:['mascota']},
+    {id:'petlead',name:'Correa, transportadora e identificación',detail:'Añade bolsas y datos del veterinario',groups:['mascota']},
+    {id:'petrecords',name:'Registro y medicación veterinaria',detail:'Envases e indicaciones del veterinario',groups:['mascota']}
+  ];
+  const labels = { adulto:'Adulto', nino:'Niño o niña', bebe:'Bebé', adultomayor:'Adulto mayor', mascota:'Mascota' };
+  const safeRead = (key, fallback) => { try { const v = localStorage.getItem(key); return v === null ? fallback : JSON.parse(v); } catch { return fallback; } };
+  const safeWrite = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); return true; } catch { return false; } };
+  let currentView = 'inicio'; let lastCoords = null; let toastTimer;
+  function toast(message) { const el = $('#toast'); el.textContent = message; el.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2600); }
+  function navigate(view) {
+    if (!labels && !['inicio','mochila','mapa','ubicacion','alertas'].includes(view)) return;
+    currentView = view;
+    $$('.view').forEach(el => { const active = el.dataset.view === view; el.hidden = !active; el.classList.toggle('active', active); });
+    $$('.nav-item').forEach(el => { const active = el.dataset.go === view; el.classList.toggle('active', active); if (active) el.setAttribute('aria-current','page'); else el.removeAttribute('aria-current'); });
+    $('#mainContent').scrollTop = 0; window.scrollTo({top:0,behavior:'auto'}); $('#mainContent').focus({preventScroll:true});
+  }
+  document.addEventListener('click', e => { const target = e.target.closest('[data-go]'); if (target) navigate(target.dataset.go); });
+
+  const personSelect = $('#personType'); personSelect.value = safeRead(STORAGE.type, 'adulto');
+  function renderChecklist() {
+    const type = personSelect.value; safeWrite(STORAGE.type, type);
+    const checks = safeRead(STORAGE.checks, {}); const items = defaultItems.filter(item => item.groups.includes(type));
+    $('#checklist').innerHTML = items.map(item => `<label class="check-row ${checks[type + ':' + item.id] ? 'checked' : ''}"><input type="checkbox" data-check="${item.id}" ${checks[type + ':' + item.id] ? 'checked' : ''}><span><strong>${item.name}</strong><small>${item.detail}</small></span></label>`).join('');
+    updateProgress();
+  }
+  function updateProgress() {
+    const type = personSelect.value; const checks = safeRead(STORAGE.checks, {}); const items = defaultItems.filter(item => item.groups.includes(type)); const done = items.filter(item => checks[type + ':' + item.id]).length; const percent = items.length ? Math.round(done / items.length * 100) : 0;
+    $('#progressText').textContent = `${done} de ${items.length} artículos listos`; $('#progressPercent').textContent = `${percent}%`; $('#progressBar').style.width = percent + '%';
+    $$('.check-row').forEach(row => row.classList.toggle('checked', $('input', row).checked));
+  }
+  personSelect.addEventListener('change', renderChecklist);
+  $('#checklist').addEventListener('change', e => { if (!e.target.matches('[data-check]')) return; const checks = safeRead(STORAGE.checks, {}); checks[personSelect.value + ':' + e.target.dataset.check] = e.target.checked; safeWrite(STORAGE.checks, checks); updateProgress(); });
+  $('#resetChecklist').addEventListener('click', () => { const checks = safeRead(STORAGE.checks, {}); defaultItems.filter(item => item.groups.includes(personSelect.value)).forEach(item => delete checks[personSelect.value + ':' + item.id]); safeWrite(STORAGE.checks, checks); renderChecklist(); toast('Lista desmarcada.'); });
+  $('#specialNotes').value = safeRead(STORAGE.notes, '');
+  $('#saveNotes').addEventListener('click', () => { const ok = safeWrite(STORAGE.notes, $('#specialNotes').value); $('#notesStatus').textContent = ok ? 'Notas guardadas en este dispositivo.' : 'No se pudieron guardar las notas en este navegador.'; });
+
+  function renderPlaces() { const places = safeRead(STORAGE.places, []); $('#savedPlaces').innerHTML = places.length ? places.map((p,i) => `<div class="saved-item"><div><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml(p.type)} · referencia personal no verificada</small></div><button class="delete-button" data-delete-place="${i}" aria-label="Eliminar ${escapeHtml(p.name)}">Eliminar</button></div>`).join('') : '<p class="small-status">Todavía no has añadido referencias.</p>'; }
+  function renderContacts() { const contacts = safeRead(STORAGE.contacts, []); $('#contactsList').innerHTML = contacts.length ? contacts.map((c,i) => `<div class="contact-item"><div><strong>${escapeHtml(c.name)}</strong><small>${escapeHtml(c.phone)}</small></div><button class="delete-button" data-delete-contact="${i}" aria-label="Eliminar contacto ${escapeHtml(c.name)}">Eliminar</button></div>`).join('') : '<p class="small-status">Todavía no has guardado contactos.</p>'; }
+  function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  $('#placeForm').addEventListener('submit', e => { e.preventDefault(); const places = safeRead(STORAGE.places, []); places.push({name:$('#placeName').value.trim(),type:$('#placeType').value}); safeWrite(STORAGE.places, places); e.target.reset(); renderPlaces(); toast('Referencia guardada en este dispositivo.'); });
+  $('#savedPlaces').addEventListener('click', e => { const btn = e.target.closest('[data-delete-place]'); if (!btn) return; const places = safeRead(STORAGE.places, []); places.splice(Number(btn.dataset.deletePlace),1); safeWrite(STORAGE.places, places); renderPlaces(); });
+  $('#contactForm').addEventListener('submit', e => { e.preventDefault(); const contacts = safeRead(STORAGE.contacts, []); contacts.push({name:$('#contactName').value.trim(),phone:$('#contactPhone').value.trim()}); safeWrite(STORAGE.contacts, contacts); e.target.reset(); renderContacts(); toast('Contacto guardado en este dispositivo.'); });
+  $('#contactsList').addEventListener('click', e => { const btn = e.target.closest('[data-delete-contact]'); if (!btn) return; const contacts = safeRead(STORAGE.contacts, []); contacts.splice(Number(btn.dataset.deleteContact),1); safeWrite(STORAGE.contacts, contacts); renderContacts(); });
+
+  function formatCoords(pos) { const {latitude, longitude, accuracy} = pos.coords; lastCoords = {latitude,longitude,accuracy}; $('#coordinates').hidden = false; $('#coordinates').textContent = `${latitude.toFixed(6)}, ${longitude.toFixed(6)} · precisión aproximada ${Math.round(accuracy)} m`; $('#locationStatus').textContent = 'Ubicación obtenida. Revisa las coordenadas antes de compartirlas.'; $('#shareLocation').disabled = false; $('#copyLocation').disabled = false; }
+  $('#getLocation').addEventListener('click', () => { if (!('geolocation' in navigator)) { $('#locationStatus').textContent = 'Este navegador no ofrece geolocalización.'; return; } $('#locationStatus').textContent = 'Solicitando permiso de ubicación…'; navigator.geolocation.getCurrentPosition(formatCoords, err => { const msgs = {1:'No se concedió permiso. Puedes habilitarlo en los ajustes del navegador.',2:'No se pudo determinar la ubicación. Comprueba la conexión y el GPS.',3:'La solicitud tardó demasiado. Inténtalo de nuevo.'}; $('#locationStatus').textContent = msgs[err.code] || 'No se pudo obtener la ubicación.'; }, {enableHighAccuracy:true,timeout:15000,maximumAge:30000}); });
+  $('#shareLocation').addEventListener('click', async () => { if (!lastCoords) return; const url = `https://www.google.com/maps?q=${lastCoords.latitude},${lastCoords.longitude}`; const text = `Mi ubicación: ${lastCoords.latitude.toFixed(6)}, ${lastCoords.longitude.toFixed(6)}\n${url}`; if (navigator.share) { try { await navigator.share({title:'Mi ubicación - Mochila S.O.S.',text,url}); } catch (e) { if (e.name !== 'AbortError') toast('No se pudo abrir la opción para compartir.'); } } else { try { await navigator.clipboard.writeText(text); toast('Enlace de ubicación copiado.'); } catch { window.prompt('Copia este enlace de ubicación:', text); } } });
+  $('#copyLocation').addEventListener('click', async () => { if (!lastCoords) return; const text = `${lastCoords.latitude.toFixed(6)}, ${lastCoords.longitude.toFixed(6)}`; try { await navigator.clipboard.writeText(text); toast('Coordenadas copiadas.'); } catch { window.prompt('Copia las coordenadas:', text); } });
+  renderChecklist(); renderPlaces(); renderContacts(); navigate('inicio');
 })();
