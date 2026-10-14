@@ -37,3 +37,27 @@ $("copyLocation").addEventListener("click",async()=>{if(!coordsNow)return;let s=
 $("shareLocation").addEventListener("click",async()=>{if(!coordsNow)return;let url=`https://maps.google.com/?q=${coordsNow.lat},${coordsNow.lon}`;if(navigator.share){try{await navigator.share({title:"Mi ubicación - Mochila S.O.S.",url})}catch{}}else{try{await navigator.clipboard.writeText(url);toast("Enlace de ubicación copiado.")}catch{toast(url)}}});
 $("centerMap").addEventListener("click",()=>getPos(pos=>{let lat=pos.coords.latitude,lon=pos.coords.longitude;$("mapFrame").src=`https://www.openstreetmap.org/export/embed.html?bbox=${lon-.012}%2C${lat-.008}%2C${lon+.012}%2C${lat+.008}&layer=mapnik&marker=${lat}%2C${lon}`;toast("Mapa centrado en tu ubicación.")}));
 renderList();renderMed();renderPlaces();
+
+// Navegación independiente: conserva las funciones originales y muestra una sola vista.
+function showView(name){
+  const valid=['inicio','mochila','mapa','ubicacion','alertas'];
+  if(!valid.includes(name)) name='inicio';
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.dataset.view===name));
+  document.querySelectorAll('[data-view-link]').forEach(el=>{
+    const active=el.dataset.viewLink===name;
+    el.classList.toggle('active',active);
+    if(el.matches('button')) el.setAttribute('aria-current',active?'page':'false');
+  });
+  if(location.hash!=='#'+name) history.replaceState(null,'','#'+name);
+  window.scrollTo(0,0);
+  const nav=document.getElementById('nav');
+  if(nav) nav.classList.remove('open');
+}
+document.querySelectorAll('[data-view-link]').forEach(el=>{
+  el.addEventListener('click',event=>{
+    event.preventDefault();
+    showView(el.dataset.viewLink);
+  });
+});
+window.addEventListener('hashchange',()=>showView(location.hash.slice(1)));
+showView(location.hash.slice(1)||'inicio');

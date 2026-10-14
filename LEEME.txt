@@ -1,21 +1,20 @@
-MOCHILA S.O.S. — PROTOTIPO WEB
-================================
-Contenido:
-- index.html: estructura de la aplicación.
-- styles.css: diseño adaptable a celular y computadora.
-- app.js: listas, guardado local, información de medicamentos, lugares y geolocalización.
-- assets/logo-mochila-sos.png: logo original proporcionado por la usuaria.
+MOCHILA S.O.S. — versión original con navegación por pantallas
 
-Cómo ejecutar:
-1. Descomprime Mochila_SOS.zip.
-2. Abre index.html en un navegador.
-3. Para usar GPS de forma más fiable, abre el proyecto mediante localhost (por ejemplo, con Live Server de VS Code o `python -m http.server` dentro de la carpeta).
+Esta versión conserva el diseño y las funciones de la primera aplicación y cambia solamente la navegación para que se vea una sección a la vez.
 
-Importante:
-- Las listas y lugares se guardan en localStorage del navegador.
-- El mapa usa OpenStreetMap con estilo cartográfico de calles parecido al de Google Maps. El mapa necesita internet.
-- Los marcadores personales son referencias, no validaciones oficiales de seguridad. No se muestran zonas de riesgo reales sin datos oficiales verificados.
-- La ubicación necesita permiso del usuario. Compartirla a distancia necesita una conexión o medio de comunicación disponible.
-- Las alertas de esta versión son consejos generales, no alertas en tiempo real.
-- La sección de medicamentos no recomienda fármacos ni dosis. Consulta a un profesional de salud o veterinario.
-- Prototipo educativo: no reemplaza los servicios de emergencia ni las instrucciones de autoridades locales.
+Archivos:
+- index.html
+- styles.css
+- app.js
+- assets/logo-mochila-sos.png (logo enviado por la usuaria)
+
+Pantallas:
+- Inicio: bienvenida y accesos rápidos.
+- Mochila: listas por categoría, incluidos bebé (fórmula infantil, biberones, pañales e higiene), niño, adolescente, adulto, adulto mayor y mascota; información de medicamentos.
+- Mapa: mapa en línea y marcadores personales.
+- Ubicación: obtener, copiar y compartir coordenadas.
+- Alertas: consejos y guía rápida de emergencia.
+
+Para probar: extrae la carpeta y abre index.html en un navegador. Para actualizar GitHub Pages, sube el contenido de esta carpeta a la raíz del repositorio existente y confirma los cambios.
+
+Notas: el mapa necesita internet. La ubicación requiere permiso del navegador y HTTPS o localhost. Los marcadores personales no son validación oficial de zonas seguras. La app no envía alertas oficiales ni despacha servicios de rescate.
